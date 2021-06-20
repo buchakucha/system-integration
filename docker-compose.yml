@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  jenkins:
+    container_name: jenkins
+    build:
+      context: jenkins
+      args:
+        JENKINS_VERSION: 2.235.4
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - /tmp:/var/jenkins_home/secrets/
+      - ./jenkins/data:/var/jenkins_home/
