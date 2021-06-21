@@ -5,16 +5,15 @@ load 'test_helper/bats-assert/load'
 load test_helpers
 
 SUT_IMAGE=$(sut_image)
-SUT_DESCRIPTION=$(echo $SUT_IMAGE | sed -e 's/bats-jenkins-//g')
 
 . $BATS_TEST_DIRNAME/../jenkins-support
 
-@test "[${SUT_DESCRIPTION}] build image" {
+@test "build image" {
   cd $BATS_TEST_DIRNAME/..
   docker_build -t $SUT_IMAGE .
 }
 
-@test "[${SUT_DESCRIPTION}] versionLT" {
+@test "versionLT" {
   run docker run --rm $SUT_IMAGE bash -c "source /usr/local/bin/jenkins-support && versionLT 1.0 1.0"
   assert_failure
   run docker run --rm $SUT_IMAGE bash -c "source /usr/local/bin/jenkins-support && versionLT 1.0 1.1"
@@ -31,7 +30,7 @@ SUT_DESCRIPTION=$(echo $SUT_IMAGE | sed -e 's/bats-jenkins-//g')
   assert_failure
 }
 
-@test "[${SUT_DESCRIPTION}] permissions are propagated from override file" {
+@test "permissions are propagated from override file" {
   run docker_build_child $SUT_IMAGE-functions $BATS_TEST_DIRNAME/functions
   assert_success
 
