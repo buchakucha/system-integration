@@ -48,7 +48,9 @@ services:
 
   taiga-back:
     image: taigaio/taiga-back:latest
-    environment: *default-back-environment
+    environment: 
+      <<: *default-back-environment
+      PUBLIC_REGISTER_ENABLED: "True"
     volumes: *default-back-volumes
     networks:
       - taiga
@@ -84,6 +86,7 @@ services:
   taiga-front:
     image: taigaio/taiga-front:latest
     environment:
+      PUBLIC_REGISTER_ENABLED: "true"
       TAIGA_URL: "http://localhost:9000"
       TAIGA_WEBSOCKETS_URL: "ws://localhost:9000"
     networks:
