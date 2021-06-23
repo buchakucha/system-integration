@@ -2,20 +2,20 @@ const axios = require('axios');
 const jenkinsapi = require('jenkins-api');
 
 const getUsIds = async () => {
-    const { data } = await axios.get("http://localhost:9000/api/v1/userstories");
+    const { data } = await axios.get("http://192.168.1.106:9000/api/v1/userstories");
 
     return data.filter(us => us.status_extra_info.name === "Ready for test").map(us => us.id);
 }
 
 const getContextById = async (id) => {
-    const { data } = await axios.get(`http://localhost:9000/api/v1/userstories/${id}`);
+    const { data } = await axios.get(`http://192.168.1.106:9000/api/v1/userstories/${id}`);
     const [token, pipelineName] = data.description.toString().split(' ');
 
     return { token, pipelineName };
 }
 
 const runPipelineByUrl = async (token, pipelineName) => {
-    let jenkins = jenkinsapi.init(`http://admin:${token}@localhost:8080`);
+    let jenkins = jenkinsapi.init(`http://admin:${token}@192.168.1.106:8080`);
     jenkins.build(pipelineName, function (err, data) {
         if (err) { return console.log(err); }
         console.log(data)

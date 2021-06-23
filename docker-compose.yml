@@ -9,7 +9,7 @@ x-environment:
   POSTGRES_HOST: taiga-db
   # Taiga settings
   TAIGA_SECRET_KEY: "buchakucha"
-  TAIGA_SITES_DOMAIN: "localhost:9000"
+  TAIGA_SITES_DOMAIN: "192.168.1.106:9000"
   TAIGA_SITES_SCHEME: "http"
   # Email settings. Uncomment following lines and configure your SMTP server
   EMAIL_BACKEND: "django.core.mail.backends.smtp.EmailBackend"
@@ -40,9 +40,9 @@ services:
     ports:
       - 8080:8080
       - 50000:50000
-    volumes:
-      - ./tmp:/var/jenkins_home/secrets/
-      # - ./jenkins/data:/var/jenkins_home/
+    # volumes:
+    #   - ./tmp:/var/jenkins_home/secrets/
+    #   - ./jenkins/data:/var/jenkins_home/
   
   integration:
     container_name: integration
@@ -61,7 +61,7 @@ services:
       - taiga
  
   taiga-back:
-    image: taigaio/taiga-back:latest
+    image: taigaio/taiga-back:6.0.9
     environment: 
       <<: *default-back-environment
       PUBLIC_REGISTER_ENABLED: "True"
@@ -74,7 +74,7 @@ services:
       - taiga-async-rabbitmq
  
   taiga-async:
-    image: taigaio/taiga-back:latest
+    image: taigaio/taiga-back:6.0.9
     entrypoint: ["/taiga-back/docker/async_entrypoint.sh"]
     environment: *default-back-environment
     volumes: *default-back-volumes
@@ -98,18 +98,18 @@ services:
       - taiga
  
   taiga-front:
-    image: taigaio/taiga-front:latest
+    image: taigaio/taiga-front:6.0.10
     environment:
       PUBLIC_REGISTER_ENABLED: "true"
-      TAIGA_URL: "http://localhost:9000"
-      TAIGA_WEBSOCKETS_URL: "ws://localhost:9000"
+      TAIGA_URL: "http://192.168.1.106:9000"
+      TAIGA_WEBSOCKETS_URL: "ws://192.168.1.106:9000"
     networks:
       - taiga
      # volumes:
      #   - ./conf.json:/usr/share/nginx/html/conf.json
  
   taiga-events:
-    image: taigaio/taiga-events:latest
+    image: taigaio/taiga-events:6.0.2
     environment:
       RABBITMQ_USER: taiga
       RABBITMQ_PASS: taiga
@@ -132,7 +132,7 @@ services:
       - taiga
  
   taiga-protected:
-    image: taigaio/taiga-protected:latest
+    image: taigaio/taiga-protected:6.0.0
     environment:
       MAX_AGE: 360
       SECRET_KEY: "buchakucha"
