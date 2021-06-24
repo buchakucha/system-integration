@@ -1,5 +1,7 @@
+# Указание версии
 version: '3'
 
+# Объявление переменных окружения
 x-environment:
   &default-back-environment
   # Database settings
@@ -27,15 +29,20 @@ x-environment:
   # Telemetry settings
   ENABLE_TELEMETRY: "False"
 
+# Указание томов (связывание файлов на машине и в контейнере)
 x-volumes:
   &default-back-volumes
   - ./taiga-docker/data/static:/taiga-back/static
   - ./taiga-docker/data/media:/taiga-back/media
 
+# Объявление сервисов
 services:
   jenkins:
+    # Название контейнера
     container_name: jenkins
+    # Указание образа для контейнера
     image: jenkins/jenkins:lts-jdk11
+    # Порты (на машине:в контейнере)
     ports:
       - 8080:8080
       - 50000:50000
@@ -43,11 +50,15 @@ services:
       - ./jenkins/secret:/var/jenkins_home/secrets/
       - ./jenkins/data:/var/jenkins_home/
   
+  # Сервис для интеграции
   integration:
     container_name: integration
+    # Билдим по Dockerfile в папке ./integration
     build: ./integration
+    # Контейнер будет использовать сетевое пространство имен хоста
     network_mode: "host"
-    
+  
+    # Настройка сервисов Taiga
   taiga-db:
     image: postgres:12.3
     environment:
@@ -56,6 +67,7 @@ services:
       POSTGRES_PASSWORD: taiga
     volumes:
       - ./taiga-docker/data/db:/var/lib/postgresql/data
+    # Указание сети 
     networks:
       - taiga
  
