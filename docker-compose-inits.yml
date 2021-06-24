@@ -6,7 +6,7 @@ x-environment:
   POSTGRES_USER: taiga
   POSTGRES_PASSWORD: taiga
   POSTGRES_HOST: taiga-db
-  TAIGA_SECRET_KEY: "taiga-back-secret-key"
+  TAIGA_SECRET_KEY: "buchakucha"
   # these rabbitmq settings should be the same as
   # in taiga-rabbitmq and taiga-events services
   RABBITMQ_USER: taiga
