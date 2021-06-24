@@ -32,18 +32,16 @@ def action(path_dir, path_back, action)
     absolute_path_dir = File.expand_path(path_dir)
     absolute_path_back = File.expand_path(path_back)
     if action == "zip"
-      puts("Введите название архива с расширением tar (например, backup.tar)")
-      archive = gets.chomp
-      if !File.exist?(File.join(absolute_path_back, archive))
+        time = Time.new
+        archive = "backup-#{time.strftime("%d_%m_%Y_%H_%M_%S")}.tar"
+        puts "Создание архива \"#{archive}\""
+        if !File.exist?(File.join(absolute_path_back, archive))
         run('sudo', 'rm', '-rf','/tmp/last_backup/')
         run('sudo', 'mkdir', '/tmp/last_backup/')
         run('sudo', 'cp', '-r', File.join(absolute_path_dir, 'taiga-docker', 'data'), '/tmp/last_backup/taiga-docker/')
         run('sudo', 'cp', '-r', File.join(absolute_path_dir, 'jenkins', 'data'), '/tmp/last_backup/jenkins/') 
         run('sudo', 'tar', '-cvf', File.join(absolute_path_back, archive), '/tmp/last_backup/')
         run('sudo', 'rm', '-rf', '/tmp/last_backup')
-      else
-        puts "Архив с таким именем существует, введите другое название"
-        action(path_dir, path_back, action)
     end
     elsif action == "unzip"
       puts("Введите название архива с расширением tar, которое необходимо распаковать (например, backup.tar)")

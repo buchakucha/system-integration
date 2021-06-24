@@ -29,9 +29,8 @@ x-environment:
 
 x-volumes:
   &default-back-volumes
-  - taiga-static-data:/taiga-back/static
-  - taiga-media-data:/taiga-back/media
-  # - ./config.py:/taiga-back/settings/config.py
+  - ./taiga-docker/data/static:/taiga-back/static
+  - ./taiga-docker/data/media:/taiga-back/media
 
 services:
   jenkins:
@@ -41,7 +40,7 @@ services:
       - 8080:8080
       - 50000:50000
     # volumes:
-    #   - ./tmp:/var/jenkins_home/secrets/
+    #   - ./jenkins/secret:/var/jenkins_home/secrets/
     #   - ./jenkins/data:/var/jenkins_home/
   
   integration:
