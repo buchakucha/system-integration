@@ -1,5 +1,5 @@
 # Указание версии
-version: '3'
+version: '3.5'
 
 # Объявление переменных окружения
 x-environment:
@@ -32,31 +32,31 @@ x-environment:
 # Указание томов (связывание файлов на машине и в контейнере)
 x-volumes:
   &default-back-volumes
-  - taiga-static-data:/taiga-back/static
-  - taiga-media-data:/taiga-back/media
+  - ./taiga-docker/data/taiga-static-data:/taiga-back/static
+  - ./taiga-docker/data/taiga-media-data:/taiga-back/media
 
 # Объявление сервисов
 services:
-  jenkins:
-    # Название контейнера
-    container_name: jenkins
-    # Указание образа для контейнера
-    image: jenkins/jenkins:lts-jdk11
-    # Порты (на машине:в контейнере)
-    ports:
-      - 8080:8080
-      - 50000:50000
-    volumes:
-      - ./jenkins/secret:/var/jenkins_home/secrets/
-      - ./jenkins/data:/var/jenkins_home/
+  # jenkins:
+  #   # Название контейнера
+  #   container_name: jenkins
+  #   # Указание образа для контейнера
+  #   image: jenkins/jenkins:lts-jdk11
+  #   # Порты (на машине:в контейнере)
+  #   ports:
+  #     - 8080:8080
+  #     - 50000:50000
+  #   volumes:
+  #     - ./jenkins/secret:/var/jenkins_home/secrets/
+  #     - ./jenkins/data:/var/jenkins_home/
   
-  # Сервис для интеграции
-  integration:
-    container_name: integration
-    # Билдим по Dockerfile в папке ./integration
-    build: ./integration
-    # Контейнер будет использовать сетевое пространство имен хоста
-    network_mode: "host"
+  # # Сервис для интеграции
+  # integration:
+  #   container_name: integration
+  #   # Билдим по Dockerfile в папке ./integration
+  #   build: ./integration
+  #   # Контейнер будет использовать сетевое пространство имен хоста
+  #   network_mode: "host"
   
     # Настройка сервисов Taiga
   taiga-db:
@@ -66,7 +66,7 @@ services:
       POSTGRES_USER: taiga
       POSTGRES_PASSWORD: taiga
     volumes:
-      - taiga-db-data:/var/lib/postgresql/data
+      - ./taiga-docker/data/taiga-db-data:/var/lib/postgresql/data
     # Указание сети 
     networks:
       - taiga
@@ -104,7 +104,7 @@ services:
       RABBITMQ_DEFAULT_PASS: taiga
       RABBITMQ_DEFAULT_VHOST: taiga
     volumes:
-      - taiga-async-rabbitmq-data:/var/lib/rabbitmq
+      - ./taiga-docker/data/taiga-async-rabbitmq-data:/var/lib/rabbitmq
     networks:
       - taiga
  
@@ -138,7 +138,7 @@ services:
       RABBITMQ_DEFAULT_PASS: taiga
       RABBITMQ_DEFAULT_VHOST: taiga
     volumes:
-      - taiga-events-rabbitmq-data:/var/lib/rabbitmq
+      - ./taiga-docker/data/taiga-events-rabbitmq-data:/var/lib/rabbitmq
     networks:
       - taiga
  
@@ -156,8 +156,8 @@ services:
       - "9000:80"
     volumes:
       - ./taiga-docker/taiga-gateway/taiga.conf:/etc/nginx/conf.d/default.conf
-      - taiga-static-data:/taiga/static
-      - taiga-media-data:/taiga/media
+      - ./taiga-docker/data/taiga-static-data:/taiga/static
+      - ./taiga-docker/data/taiga-media-data:/taiga/media
     networks:
       - taiga
     depends_on:
